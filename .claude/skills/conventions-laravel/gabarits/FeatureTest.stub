@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Models\{{ Model }};
+
+it('liste les {{ models }} paginés', function () {
+    {{ Model }}::factory()->count(3)->create();
+
+    $this->getJson('/api/{{ models }}')
+        ->assertOk()
+        ->assertJsonCount(3, 'data')
+        ->assertJsonStructure(['data' => [['id', 'name']], 'links', 'meta']);
+});
+
+it('affiche un {{ model }}', function () {
+    ${{ model }} = {{ Model }}::factory()->create();
+
+    $this->getJson("/api/{{ models }}/{${{ model }}->id}")
+        ->assertOk()
+        ->assertJsonPath('data.id', ${{ model }}->id);
+});
+
+it('crée un {{ model }} et renvoie 201', function () {
+    $payload = ['name' => 'Exemple'];
+
+    $this->postJson('/api/{{ models }}', $payload)
+        ->assertCreated()
+        ->assertJsonPath('data.name', 'Exemple');
+
+    $this->assertDatabaseHas('{{ table }}', $payload);
+});
+
+it('refuse une création invalide avec 422', function () {
+    $this->postJson('/api/{{ models }}', [])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['name']);
+});
+
+it('renvoie 404 pour un {{ model }} inconnu', function () {
+    $this->getJson('/api/{{ models }}/999999')
+        ->assertNotFound();
+});

@@ -65,3 +65,4 @@ Pest, Vitest et Playwright ne tournent pas en CI : les lancer localement.
 - Style front : Prettier (guillemets simples, `printWidth` 100), indentation 2 espaces ;
   PHP indenté à 4 espaces (`.editorconfig`). Le code PHP existant n'a pas encore
   `declare(strict_types=1)` : l'ajouter dans les fichiers modifiés ou créés.
+- Ne lis jamais les .env
